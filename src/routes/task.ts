@@ -1,8 +1,11 @@
 import { validateBody } from "@/middlewares/validateBody";
 import { withMiddlewares } from "@/middlewares/withMiddlewares";
 import { applySchema } from "@/schemas/applySchema";
-import { createTaskBodySchema } from "@/schemas/tasks";
-import { createTask, listTasks } from "@/usecases/tasks";
+import {
+  createTaskBodySchema,
+  updateTasksPrioritiesBodySchema,
+} from "@/schemas/tasks";
+import { createTask, listTasks, updatePriorities } from "@/usecases/tasks";
 import express from "express";
 
 const router = express.Router();
@@ -27,9 +30,21 @@ router.post(
   })
 );
 
-router.put("/priorities", (_, res) => {
-  res.send("Put Tasks Priorities");
-});
+router.put(
+  "/priorities",
+  withMiddlewares({
+    middlewares: [
+      validateBody((body) =>
+        applySchema(body, updateTasksPrioritiesBodySchema)
+      ),
+    ],
+    routeHandler: async (req, res) => {
+      await updatePriorities(req.body);
+
+      return res.status(200).send();
+    },
+  })
+);
 
 router.put("/complete-task/:id", (_, res) => {
   res.send("Complete task");
