@@ -2,13 +2,12 @@ import request from "supertest";
 import server from "@/server";
 import prisma from "@/db/prismaClient";
 import { TaskStatus } from "@/types/tasks";
-import { Task } from "@prisma/client";
+import { Prisma, Task } from "@prisma/client";
 
 describe("Tasks", () => {
   const mockPartialTask: Partial<Task> = {
     description: "Task",
     priority: 0,
-    status: TaskStatus.PENDING,
   };
 
   const insertMockTasks = async () => {
@@ -30,7 +29,17 @@ describe("Tasks", () => {
       },
     });
 
-    return [task1, task0];
+    const subtask = await prisma.task.create({
+      data: {
+        id: 2,
+        description: "Subtask",
+        priority: 0,
+        status: TaskStatus.PENDING,
+        parentTaskId: task1.id,
+      },
+    });
+
+    return [task1, task0, subtask];
   };
 
   const noExistingTaskId = 10;
@@ -43,6 +52,7 @@ describe("Tasks", () => {
       },
       where: {
         deletedAt: null,
+        parentTaskId: null,
       },
     });
   };
@@ -99,9 +109,34 @@ describe("Tasks", () => {
       expect(body[0].priority).toEqual(-1);
       expect(body.every((task: Task) => task.deletedAt === null)).toEqual(true);
     });
+
+    it("Should not return tasks that have a parent", async () => {
+      await insertMockTasks();
+
+      const { body } = await request(server).get("/tasks").send();
+
+      expect(Array.isArray(body)).toEqual(true);
+      expect(body).toHaveLength(2);
+      expect(body.every((task: Task) => task.parentTaskId === null)).toEqual(
+        true
+      );
+    });
+
+    it("Should return subtasks of each task", async () => {
+      await insertMockTasks();
+
+      const { body } = await request(server).get("/tasks").send();
+
+      expect(
+        body.some(
+          (task: Prisma.TaskGetPayload<{ include: { subtasks: true } }>) =>
+            task.subtasks.length > 0
+        )
+      ).toEqual(true);
+    });
   });
 
-  describe("#Post /tasks", () => {
+  describe("#POST /tasks", () => {
     it("Should create a task and return the resulting task", async () => {
       const { body } = await request(server)
         .post("/tasks")
@@ -110,7 +145,6 @@ describe("Tasks", () => {
       expect(body.id).not.toBeNull();
       expect(body.description).toEqual(mockPartialTask.description);
       expect(body.priority).toEqual(mockPartialTask.priority);
-      expect(body.status).toEqual(mockPartialTask.status);
     });
 
     it("Should return HTTP 201 Created when the task is created correctly", async () => {
@@ -128,9 +162,17 @@ describe("Tasks", () => {
 
       expect(status).toEqual(400);
     });
+
+    it("Should return HTTP 400 Bad Request when trying to create add a subtask to a task that does not exists", async () => {
+      const { status } = await request(server)
+        .post("/tasks")
+        .send({ ...mockPartialTask, parentTaskId: 10 });
+
+      expect(status).toEqual(400);
+    });
   });
 
-  describe("#Put /tasks/priorities", () => {
+  describe("#PUT /tasks/priorities", () => {
     it("Should update the priorities of every task included in the body", async () => {
       const [task1, task2] = await insertMockTasks();
 
@@ -182,7 +224,7 @@ describe("Tasks", () => {
     });
   });
 
-  describe("#Put /tasks/complete-task/:id", () => {
+  describe("#PUT /tasks/complete-task/:id", () => {
     it("Should mark the task identified by :id as complete and return the updated task", async () => {
       await insertMockTasks();
 
@@ -215,7 +257,7 @@ describe("Tasks", () => {
     });
   });
 
-  describe("#Delete /tasks/:id", () => {
+  describe("#DELETE /tasks/:id", () => {
     it("Should delete task identified by :id", async () => {
       await insertMockTasks();
 
