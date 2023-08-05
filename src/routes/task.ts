@@ -1,4 +1,8 @@
-import { listTasks } from "@/usecases/tasks";
+import { validateBody } from "@/middlewares/validateBody";
+import { withMiddlewares } from "@/middlewares/withMiddlewares";
+import { applySchema } from "@/schemas/applySchema";
+import { createTaskBodySchema } from "@/schemas/tasks";
+import { createTask, listTasks } from "@/usecases/tasks";
 import express from "express";
 
 const router = express.Router();
@@ -9,9 +13,19 @@ router.get("/", async (_, res) => {
   return res.json(tasks);
 });
 
-router.post("/", (_, res) => {
-  res.send("Post Task");
-});
+router.post(
+  "/",
+  withMiddlewares({
+    middlewares: [
+      validateBody((body) => applySchema(body, createTaskBodySchema)),
+    ],
+    routeHandler: async (req, res) => {
+      const task = await createTask(req.body);
+
+      return res.status(201).json(task);
+    },
+  })
+);
 
 router.put("/priorities", (_, res) => {
   res.send("Put Tasks Priorities");
