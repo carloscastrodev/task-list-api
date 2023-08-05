@@ -1,4 +1,13 @@
+import { TaskStatus } from "@/types/tasks";
 import Joi from "joi";
+
+const taskStatusValidator = (value: number) => {
+  if (!Object.values(TaskStatus).includes(value)) {
+    return { message: "Invalid status provided" };
+  }
+
+  return value;
+};
 
 export const createTaskBodySchema = Joi.object({
   description: Joi.string().messages({
@@ -10,6 +19,7 @@ export const createTaskBodySchema = Joi.object({
   priority: Joi.number().messages({
     "number.base": "Priority should be a number",
   }),
+  status: Joi.custom(taskStatusValidator).optional(),
 });
 
 export const completeTaskParamsSchema = Joi.object({
