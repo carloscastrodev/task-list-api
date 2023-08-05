@@ -1,0 +1,42 @@
+version: '3.9'
+
+services:
+  db:
+    ports:
+      - 5434:5432
+    image: postgres:latest
+    restart: on-failure
+    networks:
+      - api
+    environment:
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_USER: john
+      POSTGRES_DB: buzzvel
+    expose:
+      - 5434
+    
+  app:
+    restart: always
+    networks:
+      - api
+    depends_on:
+      - db
+    ports:
+      - 3333:3333
+    build:
+      context: '.'
+      dockerfile: Dockerfile.development
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    env_file:
+      - .env
+    volumes:
+      - .:/usr/src/app
+      - node_modules:/usr/src/app/node_modules
+
+
+networks:
+  api:
+    
+volumes:
+  node_modules:
