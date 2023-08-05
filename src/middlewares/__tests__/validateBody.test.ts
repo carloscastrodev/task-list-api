@@ -1,19 +1,13 @@
-import { Request, Response } from "express";
 import { validateBody } from "../validateBody";
+import {
+  mockNext,
+  mockReq,
+  mockRes,
+  mockResJson,
+  mockResStatus,
+} from "@/mocks/express";
 
 describe("@middlewares - validateBody", () => {
-  const mockReq = {
-    body: {},
-  } as Request;
-
-  const mockResStatus = jest.fn();
-  const mockResJson = jest.fn();
-  const mockRes = {
-    status: mockResStatus,
-    json: mockResJson,
-  } as unknown as Response;
-
-  const mockNext = jest.fn();
   const mockValidator = jest.fn();
 
   beforeEach(() => {

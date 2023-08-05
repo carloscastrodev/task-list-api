@@ -1,19 +1,13 @@
-import { Request, Response } from "express";
 import { validateRouteParams } from "../validateRouteParams";
+import {
+  mockNext,
+  mockReq,
+  mockRes,
+  mockResJson,
+  mockResStatus,
+} from "@/mocks/express";
 
 describe("@middlewares - validateRouteParams", () => {
-  const mockReq = {
-    params: {},
-  } as Request;
-
-  const mockResStatus = jest.fn();
-  const mockResJson = jest.fn();
-  const mockRes = {
-    status: mockResStatus,
-    json: mockResJson,
-  } as unknown as Response;
-
-  const mockNext = jest.fn();
   const mockValidator = jest.fn();
 
   beforeEach(() => {
