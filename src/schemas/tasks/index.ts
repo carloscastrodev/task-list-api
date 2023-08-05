@@ -24,17 +24,17 @@ export const createTaskBodySchema = Joi.object({
 
 export const completeTaskParamsSchema = Joi.object({
   id: Joi.string()
-    .regex(/^[0,9]{1,}$/)
+    .regex(/^[0-9]+$/)
     .messages({
-      "string.pattern.base": "id should be a valid number",
+      "string.pattern.base": "param id should be a valid number",
     }),
 });
 
 export const deleteTaskParamsSchema = Joi.object({
   id: Joi.string()
-    .regex(/^[0,9]{1,}$/)
+    .regex(/^[0-9]+$/)
     .messages({
-      "string.pattern.base": "id should be a valid number",
+      "string.pattern.base": "param id should be a valid number",
     }),
 });
 
