@@ -41,6 +41,9 @@ describe("Tasks", () => {
       orderBy: {
         priority: "asc",
       },
+      where: {
+        deletedAt: null,
+      },
     });
   };
 
