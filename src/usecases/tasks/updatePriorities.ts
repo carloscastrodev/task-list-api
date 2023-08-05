@@ -8,7 +8,7 @@ export async function updatePriorities(
 ): Promise<void> {
   await prisma.$transaction(
     Object.entries(idPriorityMap).map(([id, priority]) =>
-      prisma.task.update({
+      prisma.task.updateMany({
         where: {
           id: Number(id),
         },
