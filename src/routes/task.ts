@@ -1,3 +1,4 @@
+import { transformParams } from "@/middlewares/transformParams";
 import { validateBody } from "@/middlewares/validateBody";
 import { validateRouteParams } from "@/middlewares/validateRouteParams";
 import { withMiddlewares } from "@/middlewares/withMiddlewares";
@@ -61,15 +62,18 @@ router.put(
       validateRouteParams((params) =>
         applySchema(params, completeTaskParamsSchema)
       ),
+      transformParams({ id: Number }),
     ],
     routeHandler: async (req, res) => {
-      const existingTask = await findTaskById(Number(req.params["id"]));
+      const existingTask = await findTaskById(
+        req.params["id"] as unknown as number
+      );
 
       if (!existingTask) {
         return res.status(404).json({ message: "Not found" });
       }
 
-      const task = await completeTask(Number(req.params["id"]));
+      const task = await completeTask(req.params["id"] as unknown as number);
 
       return res.status(200).json(task);
     },
