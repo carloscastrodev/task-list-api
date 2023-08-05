@@ -1,6 +1,9 @@
 import prisma from "@/db/prismaClient";
 import { Task } from "@prisma/client";
 
+/**
+ * List tasks and subtasks. The root level of the array only contains tasks that are not subtasks.
+ */
 export async function listTasks(): Promise<Task[]> {
   return await prisma.task.findMany({
     include: {
@@ -11,6 +14,7 @@ export async function listTasks(): Promise<Task[]> {
     },
     where: {
       deletedAt: null,
+      parentTaskId: null,
     },
   });
 }
