@@ -1,25 +1,16 @@
-import { TaskStatus } from "@/types/tasks";
 import Joi from "joi";
 
-const taskStatusValidator = (value: number) => {
-  if (!Object.values(TaskStatus).includes(value)) {
-    return { message: "Invalid status provided" };
-  }
-
-  return value;
-};
-
 export const createTaskBodySchema = Joi.object({
-  description: Joi.string().messages({
+  description: Joi.string().required().messages({
     "any.required": "description is required",
   }),
   parentTaskId: Joi.number().allow(null).messages({
     "number.base": "parentTaskId should be a number or null",
   }),
-  priority: Joi.number().messages({
-    "number.base": "Priority should be a number",
+  priority: Joi.number().required().messages({
+    "any.required": "priority is required",
+    "number.base": "priority should be a number",
   }),
-  status: Joi.custom(taskStatusValidator).optional(),
 });
 
 export const completeTaskParamsSchema = Joi.object({
