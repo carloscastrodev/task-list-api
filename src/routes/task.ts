@@ -15,8 +15,8 @@ import {
   deleteTask,
   listTasks,
   updatePriorities,
+  findTaskById,
 } from "@/usecases/tasks";
-import { findTaskById } from "@/usecases/tasks/findTaskById";
 import express from "express";
 
 const router = express.Router();
