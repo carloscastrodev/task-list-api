@@ -71,7 +71,7 @@ router.put(
 
       const task = await completeTask(Number(req.params["id"]));
 
-      return res.status(200).send(task);
+      return res.status(200).json(task);
     },
   })
 );
