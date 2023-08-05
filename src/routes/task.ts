@@ -6,11 +6,13 @@ import { applySchema } from "@/schemas/applySchema";
 import {
   completeTaskParamsSchema,
   createTaskBodySchema,
+  deleteTaskParamsSchema,
   updateTasksPrioritiesBodySchema,
 } from "@/schemas/tasks";
 import {
   completeTask,
   createTask,
+  deleteTask,
   listTasks,
   updatePriorities,
 } from "@/usecases/tasks";
@@ -80,8 +82,29 @@ router.put(
   })
 );
 
-router.delete("/:id", (_, res) => {
-  res.send("Delete Task");
-});
+router.delete(
+  "/:id",
+  withMiddlewares({
+    middlewares: [
+      validateRouteParams((params) =>
+        applySchema(params, deleteTaskParamsSchema)
+      ),
+      transformParams({ id: Number }),
+    ],
+    routeHandler: async (req, res) => {
+      const existingTask = await findTaskById(
+        req.params["id"] as unknown as number
+      );
+
+      if (!existingTask) {
+        return res.status(404).json({ message: "Not found" });
+      }
+
+      await deleteTask(req.params["id"] as unknown as number);
+
+      return res.status(204).send();
+    },
+  })
+);
 
 export default router;
