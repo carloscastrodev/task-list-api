@@ -5,7 +5,9 @@
   "license": "MIT",
   "scripts": {
     "build": "tsc --build",
-    "dev": "yarn prisma generate && yarn prisma migrate deploy && nodemon"
+    "dev": "yarn prisma generate && yarn prisma migrate deploy && nodemon",
+    "docker:up:db": "docker-compose up -d db",
+    "test": "yarn prisma migrate deploy && jest --testTimeout=60 -i --verbose"
   },
   "dependencies": {
     "@prisma/client": "^5.1.1",
