@@ -12,9 +12,13 @@ export function applySchema(
     };
   } catch (err) {
     if (err instanceof Joi.ValidationError) {
+      let sentMessage = "";
+
+      err.details.forEach(({ message }) => (sentMessage += message + "\n"));
+
       return {
         isValid: false,
-        message: (err as Error).message,
+        message: sentMessage,
       };
     }
 
