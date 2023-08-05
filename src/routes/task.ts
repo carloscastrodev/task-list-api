@@ -1,11 +1,14 @@
+import { listTasks } from "@/usecases/tasks";
 import express from "express";
 
 const router = express.Router();
 
-/* Task resource routes */
-router.get("/", (_, res) => {
-  res.send("Get Tasks");
+router.get("/", async (_, res) => {
+  const tasks = await listTasks();
+
+  return res.json(tasks);
 });
+
 router.post("/", (_, res) => {
   res.send("Post Task");
 });
