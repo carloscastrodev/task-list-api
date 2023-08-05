@@ -12,10 +12,8 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/task", taskRoutes);
+app.use("/tasks", taskRoutes);
 
-app.listen(PORT, () => {
-  console.log("Server listening on PORT", PORT);
-});
+const server = app.listen(PORT);
 
-export default app;
+export default server;
