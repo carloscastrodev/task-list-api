@@ -37,7 +37,11 @@ describe("Tasks", () => {
   const existingTaskId = 1;
 
   const getAllTasks = async () => {
-    return await prisma.task.findMany();
+    return await prisma.task.findMany({
+      orderBy: {
+        priority: "asc",
+      },
+    });
   };
 
   beforeAll(async () => {
