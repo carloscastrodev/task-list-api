@@ -1,11 +1,19 @@
 import { validateBody } from "@/middlewares/validateBody";
+import { validateRouteParams } from "@/middlewares/validateRouteParams";
 import { withMiddlewares } from "@/middlewares/withMiddlewares";
 import { applySchema } from "@/schemas/applySchema";
 import {
+  completeTaskParamsSchema,
   createTaskBodySchema,
   updateTasksPrioritiesBodySchema,
 } from "@/schemas/tasks";
-import { createTask, listTasks, updatePriorities } from "@/usecases/tasks";
+import {
+  completeTask,
+  createTask,
+  listTasks,
+  updatePriorities,
+} from "@/usecases/tasks";
+import { findTaskById } from "@/usecases/tasks/findTaskById";
 import express from "express";
 
 const router = express.Router();
@@ -46,9 +54,27 @@ router.put(
   })
 );
 
-router.put("/complete-task/:id", (_, res) => {
-  res.send("Complete task");
-});
+router.put(
+  "/complete-task/:id",
+  withMiddlewares({
+    middlewares: [
+      validateRouteParams((params) =>
+        applySchema(params, completeTaskParamsSchema)
+      ),
+    ],
+    routeHandler: async (req, res) => {
+      const existingTask = await findTaskById(Number(req.params["id"]));
+
+      if (!existingTask) {
+        return res.status(404).json({ message: "Not found" });
+      }
+
+      const task = await completeTask(Number(req.params["id"]));
+
+      return res.status(200).send(task);
+    },
+  })
+);
 
 router.delete("/:id", (_, res) => {
   res.send("Delete Task");
