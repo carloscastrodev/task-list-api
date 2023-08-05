@@ -9,12 +9,15 @@ router.get("/", (_, res) => {
 router.post("/", (_, res) => {
   res.send("Post Task");
 });
+
 router.put("/priorities", (_, res) => {
   res.send("Put Tasks Priorities");
 });
-router.patch("/:id", (_, res) => {
-  res.send("Patch Task");
+
+router.put("/complete-task/:id", (_, res) => {
+  res.send("Complete task");
 });
+
 router.delete("/:id", (_, res) => {
   res.send("Delete Task");
 });
