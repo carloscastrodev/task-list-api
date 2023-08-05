@@ -1,7 +1,9 @@
 describe("#GET /tasks", () => {
   it("Should return an empty array when no task exists", async () => {});
 
-  it("Should return an array of all tasks", async () => {});
+  it("Should return an array of all tasks ordered by priority ascending", async () => {});
+
+  it("Should not return deleted tasks", async () => {});
 });
 
 describe("#Post /tasks", () => {
@@ -17,17 +19,17 @@ describe("#Put /tasks/priorities", () => {
 
   it("Should return HTTP 200 OK when priorities are correctly updated", async () => {});
 
+  it("Should return HTTP 200 OK if any of the tasks in the body map doesn't exist", async () => {});
+
   it("Should return HTTP 400 Bad Request when the request body is not properly formatted", async () => {});
 });
 
-describe("#Patch /tasks/:id", () => {
-  it("Should update the task identified by :id and return the updated task", async () => {});
+describe("#Put /tasks/complete-task/:id", () => {
+  it("Should mark the task identified by :id as complete and return the updated task", async () => {});
 
   it("Should return HTTP 200 OK when the task is updated correctly", async () => {});
 
   it("Should return HTTP 404 Not Found when the task identified by :id does not exist", async () => {});
-
-  it("Should return HTTP 400 Bad Request when the request body is not properly formatted", async () => {});
 });
 
 describe("#Delete /tasks/:id", () => {
