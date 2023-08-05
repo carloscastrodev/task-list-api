@@ -6,7 +6,7 @@ export const validateBody: (
   return (req, res, next) => {
     const { isValid, message } = validatorFn(req.body);
 
-    if (!isValid) {
+    if (!isValid || !req.body) {
       return res.status(400).json({ message: message ?? "Bad Request" });
     }
 
