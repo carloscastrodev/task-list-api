@@ -34,6 +34,16 @@ router.post(
       validateBody((body) => applySchema(body, createTaskBodySchema)),
     ],
     routeHandler: async (req, res) => {
+      if (req.body.parentTaskId) {
+        const parentTask = await findTaskById(req.body.parentTaskId);
+
+        if (!parentTask) {
+          return res
+            .status(400)
+            .json({ message: "Parent task does not exist" });
+        }
+      }
+
       const task = await createTask(req.body);
 
       return res.status(201).json(task);
