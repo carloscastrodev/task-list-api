@@ -90,6 +90,28 @@ describe("Tasks", () => {
       expect(body[1].priority).toEqual(0);
     });
 
+    it("Should not return deleted subtasks", async () => {
+      const [parentTask] = await insertMockTasks();
+
+      await prisma.task.create({
+        data: {
+          description: "Task 1",
+          priority: 0,
+          status: TaskStatus.DELETED,
+          deletedAt: new Date(),
+          parentTaskId: parentTask!.id,
+        },
+      });
+
+      const { body } = await request(server).get("/tasks").send();
+
+      expect(Array.isArray(body)).toEqual(true);
+      expect(body[0].subtasks).toHaveLength(1);
+      expect(
+        body[0].subtasks.every((subtask: Task) => subtask.deletedAt === null)
+      ).toEqual(true);
+    });
+
     it("Should not return deleted tasks", async () => {
       await insertMockTasks();
 
