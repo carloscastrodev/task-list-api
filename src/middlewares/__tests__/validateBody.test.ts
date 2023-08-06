@@ -17,8 +17,6 @@ describe("@middlewares - validateBody", () => {
 
     mockResStatus.mockImplementation(() => mockRes);
     mockResJson.mockImplementation(() => mockRes);
-
-    mockRes.status;
   });
 
   afterEach(() => {
