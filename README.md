@@ -19,7 +19,7 @@ Before running the API, make sure you have the following installed on your syste
 1. Clone this repository to your local machine:
 
 ```bash
-git clone <repository_url>
+git clone https://github.com/carloscastrodev/task-list-api.git
 cd task-list-api
 ```
 
@@ -92,7 +92,9 @@ http://localhost:3333/docs
 
 ### Running Tests
 
-The API includes some unit and integration tests. To run the do:
+The API includes some unit and integration tests. Before running the tests, make sure to configure the `DATABASE_URL` variable at the `.env` file. Follow the instructions written in the `.env.example` file.
+
+To run the tests, do:
 
 Using npm:
 
