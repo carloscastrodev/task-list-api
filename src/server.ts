@@ -16,10 +16,14 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 
 const jsDocOptions: swaggerJSDoc.Options = {
-  apis: ["@/src/routes/*.ts"],
+  apis: [`${__dirname}/routes/*.js`, `${__dirname}/routes/*.ts`],
   definition: {
     openapi: "3.0.0",
     info: {
