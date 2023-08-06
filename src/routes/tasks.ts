@@ -150,7 +150,7 @@ router.put(
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Task'
+ *               $ref: '#/components/schemas/TaskWithSubtasks'
  *       404:
  *         description: Task not found.
  *         content:
@@ -316,7 +316,7 @@ export default router;
  *         priority: 0
  *         status: 1
  *         createdAt: '2023-08-06T15:14:53.935Z'
- *         doneAt: null
+ *         doneAt: '2023-08-06T15:14:53.935Z'
  *         deletedAt: null
  *         parentTaskId: null
  *         subtasks:
@@ -325,7 +325,7 @@ export default router;
  *             priority: 0
  *             status: 1
  *             createdAt: '2023-08-06T15:14:53.935Z'
- *             doneAt: null
+ *             doneAt: '2023-08-06T15:14:53.935Z'
  *             deletedAt: null
  *             parentTaskId: 1
  *           - id: 3
@@ -333,7 +333,7 @@ export default router;
  *             priority: 1
  *             status: 1
  *             createdAt: '2023-08-06T15:14:53.935Z'
- *             doneAt: null
+ *             doneAt: '2023-08-06T15:14:53.935Z'
  *             deletedAt: null
  *             parentTaskId: 1
  *       required:
