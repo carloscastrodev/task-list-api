@@ -21,5 +21,8 @@ export async function createTask({
       status: TaskStatus.PENDING,
       parentTaskId,
     },
+    include: {
+      subtasks: true,
+    },
   });
 }
