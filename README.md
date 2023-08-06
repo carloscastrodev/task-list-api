@@ -92,18 +92,20 @@ http://localhost:3333/docs
 
 ### Running Tests
 
-The API includes automated tests to ensure the functionality works as expected. To run the tests, use the following commands:
+The API includes some unit and integration tests. To run the do:
 
 Using npm:
 
 ```bash
-npm run docker:up:db # Starts the PostgresDB container (required for tests). This requires you to have docker installed and running.
+npm run docker:up:db # Starts the Postgres container (required for tests). This requires you to have docker installed and running.
+npm install
 npm run test
 ```
 
 Using Yarn:
 
 ```bash
-yarn docker:up:db # Starts the PostgresDB container (required for tests). This requires you to have docker installed and running.
+yarn docker:up:db # Starts the Postgres container (required for tests). This requires you to have docker installed and running.
+yarn
 yarn test
 ```
