@@ -1,14 +1,16 @@
 import { HTTPException } from "@/errors";
 import { ErrorRequestHandler } from "express";
 
-export const globalErrorHandler: ErrorRequestHandler = (err, _, res) => {
+export const globalErrorHandler: ErrorRequestHandler = (err, _, res, next) => {
   if (err) {
     if (err instanceof HTTPException) {
-      return res.status(err.status).json({ message: err.message });
+      res.status(err.status).json({ message: err.message });
     } else if (err instanceof Error) {
-      return res.status(500).json({ message: err.message });
+      res.status(500).json({ message: err.message });
     }
   }
 
-  return res.status(500).json({ message: "Internal Server Error" });
+  res.status(500).json({ message: "Internal Server Error" });
+
+  return next();
 };

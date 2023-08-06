@@ -50,4 +50,10 @@ describe("@middlewares - globalErrorHandler", () => {
       message: "Internal Server Error",
     });
   });
+
+  it("Should call the next handler", async () => {
+    globalErrorHandler(new Error(), mockReq, mockRes, mockNext);
+
+    expect(mockNext).toHaveBeenCalled();
+  });
 });
