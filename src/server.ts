@@ -6,6 +6,7 @@ import cors from "cors";
 import swaggerUi from "swagger-ui-express";
 import swaggerJSDoc from "swagger-jsdoc";
 import prisma from "@/db/prismaClient";
+import { globalErrorHandler } from "@/middlewares/globalErrorHandler";
 
 dotenv.config();
 
@@ -16,6 +17,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
+app.use(globalErrorHandler);
 
 const jsDocOptions: swaggerJSDoc.Options = {
   apis: ["@/src/routes/*.ts"],
