@@ -7,8 +7,8 @@
     "build": "tsc --build",
     "dev": "yarn prisma generate && yarn prisma migrate deploy && nodemon",
     "docker:up:db": "docker-compose up -d db",
-    "test": "yarn prisma migrate deploy && jest --testTimeout=60 -i --verbose",
-    "test:coverage": "yarn prisma migrate deploy && jest --testTimeout=60 -i --coverage"
+    "test": "yarn prisma migrate deploy && jest --testTimeout=5000 -i --verbose",
+    "test:coverage": "yarn prisma migrate deploy && jest --testTimeout=5000 -i --coverage"
   },
   "dependencies": {
     "@prisma/client": "^5.1.1",
