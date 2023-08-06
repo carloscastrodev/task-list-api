@@ -20,11 +20,8 @@ describe("@middlewares - globalErrorHandler", () => {
 
   it("Should return the correct status and message when next handler throws with a HTTPException", async () => {
     const exception = new HTTPException(401, "Unauthorized");
-    mockNext.mockImplementation(() => {
-      throw exception;
-    });
 
-    globalErrorHandler(mockReq, mockRes, mockNext);
+    globalErrorHandler(exception, mockReq, mockRes, mockNext);
 
     expect(mockRes.status).toHaveBeenCalledWith(exception.status);
 
@@ -33,11 +30,8 @@ describe("@middlewares - globalErrorHandler", () => {
 
   it("Should return status 500 and correct message when next handler throws with an Error", async () => {
     const exception = new Error("Error");
-    mockNext.mockImplementation(() => {
-      throw exception;
-    });
 
-    globalErrorHandler(mockReq, mockRes, mockNext);
+    globalErrorHandler(exception, mockReq, mockRes, mockNext);
 
     expect(mockRes.status).toHaveBeenCalledWith(500);
 
@@ -47,11 +41,8 @@ describe("@middlewares - globalErrorHandler", () => {
   it("Should return status 500 and message 'Internal Server Error' when error is not known", async () => {
     const UnknownErrorClass = class UEC {};
     const exception = new UnknownErrorClass();
-    mockNext.mockImplementation(() => {
-      throw exception;
-    });
 
-    globalErrorHandler(mockReq, mockRes, mockNext);
+    globalErrorHandler(exception, mockReq, mockRes, mockNext);
 
     expect(mockRes.status).toHaveBeenCalledWith(500);
 

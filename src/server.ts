@@ -17,7 +17,6 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
-app.use(globalErrorHandler);
 
 const jsDocOptions: swaggerJSDoc.Options = {
   apis: ["@/src/routes/*.ts"],
@@ -36,6 +35,8 @@ const openApiSpec = swaggerJSDoc(jsDocOptions);
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(openApiSpec));
 
 app.use("/tasks", taskRoutes);
+
+app.use(globalErrorHandler);
 
 const server = app.listen(PORT);
 
