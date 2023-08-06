@@ -1,3 +1,4 @@
+import { BadRequestException } from "@/errors";
 import { RequestHandler } from "express";
 
 export const validateRouteParams: (
@@ -6,11 +7,11 @@ export const validateRouteParams: (
     message?: string;
   }
 ) => RequestHandler = (validatorFn) => {
-  return (req, res, next) => {
+  return (req, _, next) => {
     const { isValid, message } = validatorFn(req.params);
 
     if (!isValid) {
-      return res.status(400).json({ message: message ?? "Bad Request" });
+      throw new BadRequestException(message);
     }
 
     return next();

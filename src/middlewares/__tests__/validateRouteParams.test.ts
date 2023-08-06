@@ -1,3 +1,4 @@
+import { BadRequestException } from "@/errors";
 import { validateRouteParams } from "../validateRouteParams";
 import {
   mockNext,
@@ -37,34 +38,14 @@ describe("@middlewares - validateRouteParams", () => {
     expect(mockNext).toHaveBeenCalled();
   });
 
-  it("Should call res.status with 400 if the params are invalid", async () => {
+  it("Should throw BadRequestException if the body is invalid", async () => {
     mockValidator.mockImplementationOnce(() => ({
       isValid: false,
     }));
 
-    validateRouteParams(mockValidator)(mockReq, mockRes, mockNext);
+    const wrapper = () =>
+      validateRouteParams(mockValidator)(mockReq, mockRes, mockNext);
 
-    expect(mockRes.status).toHaveBeenCalledWith(400);
-  });
-
-  it("Should call res.json passing the message returned by the validator", async () => {
-    mockValidator.mockImplementationOnce(() => ({
-      isValid: false,
-      message: "Body Invalid",
-    }));
-
-    validateRouteParams(mockValidator)(mockReq, mockRes, mockNext);
-
-    expect(mockRes.json).toHaveBeenCalledWith({ message: "Body Invalid" });
-  });
-
-  it("Should call res.json passing a fallback message if the validator doesn't return a message", async () => {
-    mockValidator.mockImplementationOnce(() => ({
-      isValid: false,
-    }));
-
-    validateRouteParams(mockValidator)(mockReq, mockRes, mockNext);
-
-    expect(mockRes.json).toHaveBeenCalledWith({ message: "Bad Request" });
+    expect(wrapper).toThrow(BadRequestException);
   });
 });

@@ -1,3 +1,4 @@
+import { BadRequestException } from "@/errors";
 import { validateBody } from "../validateBody";
 import {
   mockNext,
@@ -35,34 +36,14 @@ describe("@middlewares - validateBody", () => {
     expect(mockNext).toHaveBeenCalled();
   });
 
-  it("Should call res.status with 400 if the body is invalid", async () => {
+  it("Should throw BadRequestException if the body is invalid", async () => {
     mockValidator.mockImplementationOnce(() => ({
       isValid: false,
     }));
 
-    validateBody(mockValidator)(mockReq, mockRes, mockNext);
+    const wrapper = () =>
+      validateBody(mockValidator)(mockReq, mockRes, mockNext);
 
-    expect(mockRes.status).toHaveBeenCalledWith(400);
-  });
-
-  it("Should call res.json passing the message returned by the validator", async () => {
-    mockValidator.mockImplementationOnce(() => ({
-      isValid: false,
-      message: "Body Invalid",
-    }));
-
-    validateBody(mockValidator)(mockReq, mockRes, mockNext);
-
-    expect(mockRes.json).toHaveBeenCalledWith({ message: "Body Invalid" });
-  });
-
-  it("Should call res.json passing a fallback message if the validator doesn't return a message", async () => {
-    mockValidator.mockImplementationOnce(() => ({
-      isValid: false,
-    }));
-
-    validateBody(mockValidator)(mockReq, mockRes, mockNext);
-
-    expect(mockRes.json).toHaveBeenCalledWith({ message: "Bad Request" });
+    expect(wrapper).toThrow(BadRequestException);
   });
 });
