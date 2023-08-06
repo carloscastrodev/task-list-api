@@ -158,6 +158,14 @@ describe("Tasks", () => {
         )
       ).toEqual(true);
     });
+
+    it("Should return an array of subtasks in each subtask", async () => {
+      await insertMockTasks();
+
+      const { body } = await request(server).get("/tasks").send();
+
+      expect(Array.isArray(body[0].subtasks[0].subtasks)).toEqual(true);
+    });
   });
 
   describe("#POST /tasks", () => {

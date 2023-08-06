@@ -8,6 +8,9 @@ export async function listTasks(): Promise<Task[]> {
   return await prisma.task.findMany({
     include: {
       subtasks: {
+        include: {
+          subtasks: true,
+        },
         where: {
           deletedAt: null,
         },
