@@ -1,6 +1,6 @@
 # Buzzvel John Task List Api
 
-This is a simple API developed to use with Buzzvel Mid Level React Developer hiring test. 
+This is a simple API developed to use with the frontend for Buzzvel Mid Level React Developer hiring test. 
 
 ## Getting Started
 
