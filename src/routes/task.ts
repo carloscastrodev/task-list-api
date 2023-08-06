@@ -1,3 +1,4 @@
+import { BadRequestException, NotFoundException } from "@/errors";
 import { transformParams } from "@/middlewares/transformParams";
 import { validateBody } from "@/middlewares/validateBody";
 import { validateRouteParams } from "@/middlewares/validateRouteParams";
@@ -33,14 +34,12 @@ router.post(
     middlewares: [
       validateBody((body) => applySchema(body, createTaskBodySchema)),
     ],
-    routeHandler: async (req, res) => {
+    routeHandler: async (req, res, next) => {
       if (req.body.parentTaskId) {
         const parentTask = await findTaskById(req.body.parentTaskId);
 
         if (!parentTask) {
-          return res
-            .status(400)
-            .json({ message: "Parent task does not exist" });
+          return next(new BadRequestException("Parent task does not exist"));
         }
       }
 
@@ -76,13 +75,13 @@ router.put(
       ),
       transformParams({ id: Number }),
     ],
-    routeHandler: async (req, res) => {
+    routeHandler: async (req, res, next) => {
       const existingTask = await findTaskById(
         req.params["id"] as unknown as number
       );
 
       if (!existingTask) {
-        return res.status(404).json({ message: "Not found" });
+        return next(new NotFoundException("Task not found"));
       }
 
       const task = await completeTask(req.params["id"] as unknown as number);
@@ -101,13 +100,13 @@ router.delete(
       ),
       transformParams({ id: Number }),
     ],
-    routeHandler: async (req, res) => {
+    routeHandler: async (req, res, next) => {
       const existingTask = await findTaskById(
         req.params["id"] as unknown as number
       );
 
       if (!existingTask) {
-        return res.status(404).json({ message: "Not found" });
+        return next(new NotFoundException("Task not found"));
       }
 
       await deleteTask(req.params["id"] as unknown as number);
