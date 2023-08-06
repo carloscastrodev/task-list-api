@@ -11,20 +11,20 @@ describe("Tasks", () => {
   };
 
   const insertMockTasks = async () => {
-    const task1 = await prisma.task.create({
-      data: {
-        id: 1,
-        description: "Task 1",
-        priority: 0,
-        status: TaskStatus.PENDING,
-      },
-    });
-
     const task0 = await prisma.task.create({
       data: {
         id: 0,
         description: "Task 0",
         priority: -1,
+        status: TaskStatus.PENDING,
+      },
+    });
+
+    const task1 = await prisma.task.create({
+      data: {
+        id: 1,
+        description: "Task 1",
+        priority: 0,
         status: TaskStatus.PENDING,
       },
     });
@@ -35,15 +35,15 @@ describe("Tasks", () => {
         description: "Subtask",
         priority: 0,
         status: TaskStatus.PENDING,
-        parentTaskId: task1.id,
+        parentTaskId: task0.id,
       },
     });
 
-    return [task1, task0, subtask];
+    return [task0, task1, subtask];
   };
 
   const noExistingTaskId = 10;
-  const existingTaskId = 1;
+  const existingTaskId = 0;
 
   const getAllTasks = async () => {
     return await prisma.task.findMany({
@@ -95,6 +95,7 @@ describe("Tasks", () => {
 
       await prisma.task.create({
         data: {
+          id: 100,
           description: "Task 1",
           priority: 0,
           status: TaskStatus.DELETED,
@@ -117,6 +118,7 @@ describe("Tasks", () => {
 
       await prisma.task.create({
         data: {
+          id: 100,
           description: "Task 1",
           priority: 0,
           status: TaskStatus.DELETED,
@@ -167,6 +169,15 @@ describe("Tasks", () => {
       expect(body.id).not.toBeNull();
       expect(body.description).toEqual(mockPartialTask.description);
       expect(body.priority).toEqual(mockPartialTask.priority);
+    });
+
+    it("Should return the array of subtasks", async () => {
+      const { body } = await request(server)
+        .post("/tasks")
+        .send(mockPartialTask);
+
+      expect(body.subtasks).toBeDefined();
+      expect(body.subtasks).toHaveLength(0);
     });
 
     it("Should return HTTP 201 Created when the task is created correctly", async () => {
@@ -256,6 +267,17 @@ describe("Tasks", () => {
 
       expect(body.id).toEqual(existingTaskId);
       expect(body.status).toEqual(TaskStatus.DONE);
+    });
+
+    it("Should mark all of the subtasks of task identified by :id as complete and return the updated task", async () => {
+      await insertMockTasks();
+
+      const { body } = await request(server)
+        .put(`/tasks/complete-task/${existingTaskId}`)
+        .send();
+
+      expect(body.id).toEqual(existingTaskId);
+      expect(body.subtasks[0].status).toEqual(TaskStatus.DONE);
     });
 
     it("Should return HTTP 200 OK when the task is updated correctly", async () => {
