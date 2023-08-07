@@ -38,8 +38,23 @@ NODE_ENV=development
 
 ### Running with Docker
 
-To run the API using Docker, make sure you have Docker installed and running on your system. Then, use the following command:
+To run the API using Docker, make sure you have Docker installed and running on your system. Then, do the following:
 
+1. Install the dependencies using npm or Yarn:
+
+Using npm:
+
+```bash
+npm install
+```
+
+Using Yarn:
+
+```bash
+yarn
+```
+
+2. Run with Docker Compose
 ```bash
 docker-compose up -d
 ```
