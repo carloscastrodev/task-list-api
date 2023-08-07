@@ -2,6 +2,8 @@
 
 This is a simple API developed to use with the frontend for Buzzvel Mid Level React Developer hiring test. 
 
+Th frontend repository can be found [here](https://github.com/carloscastrodev/task-list).
+
 ## Getting Started
 
 Follow the instructions below to set up and run the API on your local machine.
@@ -22,7 +24,6 @@ Before running the API, make sure you have the following installed on your syste
 git clone https://github.com/carloscastrodev/task-list-api.git
 cd task-list-api
 ```
-
 
 ### Environment Setup
 
