@@ -9,7 +9,8 @@
     "dev": "yarn prisma generate && yarn prisma migrate deploy && nodemon",
     "docker:up:db": "docker-compose up -d db",
     "test": "yarn prisma migrate deploy && jest --testTimeout=5000 -i --verbose",
-    "test:coverage": "yarn prisma migrate deploy && jest --testTimeout=5000 -i --coverage"
+    "test:coverage": "yarn prisma migrate deploy && jest --testTimeout=5000 -i --coverage",
+    "start:prod": "yarn prisma migrate deploy && node ./dist/server.js"
   },
   "dependencies": {
     "@prisma/client": "^5.1.1",
